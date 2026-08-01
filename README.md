@@ -36,20 +36,22 @@
 
 ## 🔑 Bot Tokens Status
 
-### ✅ Tokens Received & Set:
-- **AsyqVerse**: `8841126574:AAE8Tj2Wiudi4GM-mGSwivtWKEmaYScaNdY`
-- **Koremin**: `8973400460:AAEC3ld9kVT_RwPXuyRtiEQTgikLUvzBT0U`
+### ✅ Tokens Received & Configured (in .env files locally):
+- **AsyqVerse**: ✅ Configured
+- **Koremin**: ✅ Configured
 
 ### 📝 Need Tokens from [@BotFather](https://t.me/BotFather):
 | Project | Config Location |
 |---------|----------------|
-| TenderBot KZ | `03-tenderbot/bot/config.py` |
-| KazContent AI | `04-kazcontent/bot/config.py` |
-| NeuroPrep ENT | `05-neuroprep/bot/config.py` |
-| NeuroJurist | `06-neurojurist/bot/config.py` |
-| Smart ASP | `07-smartasp/bot/config.py` |
-| RepairBot | `08-repairbot/bot/config.py` |
-| ChatSeller | `09-chatseller/bot/config.py` |
+| TenderBot KZ | `03-tenderbot/bot/config.py` or `.env` |
+| KazContent AI | `04-kazcontent/bot/config.py` or `.env` |
+| NeuroPrep ENT | `05-neuroprep/bot/config.py` or `.env` |
+| NeuroJurist | `06-neurojurist/bot/config.py` or `.env` |
+| Smart ASP | `07-smartasp/bot/config.py` or `.env` |
+| RepairBot | `08-repairbot/bot/config.py` or `.env` |
+| ChatSeller | `09-chatseller/bot/config.py` or `.env` |
+
+> ⚠️ **SECURITY**: Never commit bot tokens to Git! Use `.env` files and `.gitignore`.
 
 ---
 
@@ -65,7 +67,10 @@ cd 01-asyqverse
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env  # Edit: add BOT_TOKEN
+
+# Create .env file with your token
+echo "BOT_TOKEN=YOUR_BOT_TOKEN_HERE" > .env
+
 python bot.py
 ```
 
@@ -73,8 +78,6 @@ python bot.py
 ```bash
 chmod +x deploy_bots.sh
 ./deploy_bots.sh
-sudo systemctl start asyqverse-bot
-sudo systemctl start koremin-bot
 ```
 
 ---
@@ -194,6 +197,26 @@ kazakhstan-ai-projects/
 - AI dialog engine with sales push
 - FAQ auto-responses
 - Order collection system
+
+---
+
+## ⚠️ Security Notice
+
+**Never commit `.env` files or bot tokens to Git!**
+
+Each project includes `.gitignore` with:
+```
+.env
+*.env
+__pycache__/
+*.db
+.venv/
+```
+
+Always use environment variables for sensitive data:
+```bash
+export BOT_TOKEN="your_token_here"
+```
 
 ---
 
