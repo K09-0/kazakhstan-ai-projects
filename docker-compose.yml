@@ -1,0 +1,192 @@
+version: "3.8"
+
+x-bot-base: &bot-base
+  build:
+    dockerfile: ../Dockerfile.base
+  env_file: []
+  environment:
+    - KASPI_PHONE=77017891857
+    - KASPI_DB_PATH=/app/data/kaspi_payments.db
+    - PYTHONUNBUFFERED=1
+  volumes:
+    - bot_data:/app/data
+    - ../shared:/app/shared:ro
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"
+  deploy:
+    resources:
+      limits:
+        memory: 256M
+      reservations:
+        memory: 64M
+
+services:
+  asyqverse-bot:
+    <<: *bot-base
+    container_name: asyqverse-bot
+    build:
+      context: ./asyqverse
+      dockerfile: ../Dockerfile.base
+    env_file:
+      - ./asyqverse/.env
+    environment:
+      - BOT_NAME=asyqverse
+    volumes:
+      - asyqverse_data:/app/data
+      - ./shared:/app/shared:ro
+      - ./asyqverse/bot:/app/bot:ro
+    working_dir: /app
+    command: ["python", "-m", "bot.main"]
+
+  koremin-bot:
+    <<: *bot-base
+    container_name: koremin-bot
+    build:
+      context: ./koremin
+      dockerfile: ../Dockerfile.base
+    env_file:
+      - ./koremin/.env
+    environment:
+      - BOT_NAME=koremin
+    volumes:
+      - koremin_data:/app/data
+      - ./shared:/app/shared:ro
+      - ./koremin/bot:/app/bot:ro
+    working_dir: /app
+    command: ["python", "-m", "bot.main"]
+
+  tenderbot-bot:
+    <<: *bot-base
+    container_name: tenderbot-bot
+    build:
+      context: ./tenderbot
+      dockerfile: ../Dockerfile.base
+    env_file:
+      - ./tenderbot/.env
+    environment:
+      - BOT_NAME=tenderbot
+    volumes:
+      - tenderbot_data:/app/data
+      - ./shared:/app/shared:ro
+      - ./tenderbot/bot:/app/bot:ro
+      - ./tenderbot/parser:/app/parser:ro
+      - ./tenderbot/ai:/app/ai:ro
+    working_dir: /app
+    command: ["python", "-m", "bot.main"]
+
+  kazcontent-bot:
+    <<: *bot-base
+    container_name: kazcontent-bot
+    build:
+      context: ./kazcontent
+      dockerfile: ../Dockerfile.base
+    env_file:
+      - ./kazcontent/.env
+    environment:
+      - BOT_NAME=kazcontent
+    volumes:
+      - kazcontent_data:/app/data
+      - ./shared:/app/shared:ro
+      - ./kazcontent/bot:/app/bot:ro
+    working_dir: /app
+    command: ["python", "-m", "bot.main"]
+
+  neuroprep-bot:
+    <<: *bot-base
+    container_name: neuroprep-bot
+    build:
+      context: ./neuroprep
+      dockerfile: ../Dockerfile.base
+    env_file:
+      - ./neuroprep/.env
+    environment:
+      - BOT_NAME=neuroprep
+    volumes:
+      - neuroprep_data:/app/data
+      - ./shared:/app/shared:ro
+      - ./neuroprep/bot:/app/bot:ro
+    working_dir: /app
+    command: ["python", "-m", "bot.main"]
+
+  neurojurist-bot:
+    <<: *bot-base
+    container_name: neurojurist-bot
+    build:
+      context: ./neurojurist
+      dockerfile: ../Dockerfile.base
+    env_file:
+      - ./neurojurist/.env
+    environment:
+      - BOT_NAME=neurojurist
+    volumes:
+      - neurojurist_data:/app/data
+      - ./shared:/app/shared:ro
+      - ./neurojurist/bot:/app/bot:ro
+    working_dir: /app
+    command: ["python", "-m", "bot.main"]
+
+  smartasp-bot:
+    <<: *bot-base
+    container_name: smartasp-bot
+    build:
+      context: ./smartasp
+      dockerfile: ../Dockerfile.base
+    env_file:
+      - ./smartasp/.env
+    environment:
+      - BOT_NAME=smartasp
+    volumes:
+      - smartasp_data:/app/data
+      - ./shared:/app/shared:ro
+      - ./smartasp/bot:/app/bot:ro
+    working_dir: /app
+    command: ["python", "-m", "bot.main"]
+
+  repairbot-bot:
+    <<: *bot-base
+    container_name: repairbot-bot
+    build:
+      context: ./repairbot
+      dockerfile: ../Dockerfile.base
+    env_file:
+      - ./repairbot/.env
+    environment:
+      - BOT_NAME=repairbot
+    volumes:
+      - repairbot_data:/app/data
+      - ./shared:/app/shared:ro
+      - ./repairbot/bot:/app/bot:ro
+    working_dir: /app
+    command: ["python", "-m", "bot.main"]
+
+  chatseller-bot:
+    <<: *bot-base
+    container_name: chatseller-bot
+    build:
+      context: ./chatseller
+      dockerfile: ../Dockerfile.base
+    env_file:
+      - ./chatseller/.env
+    environment:
+      - BOT_NAME=chatseller
+    volumes:
+      - chatseller_data:/app/data
+      - ./shared:/app/shared:ro
+      - ./chatseller/bot:/app/bot:ro
+    working_dir: /app
+    command: ["python", "-m", "bot.main"]
+
+volumes:
+  asyqverse_data:
+  koremin_data:
+  tenderbot_data:
+  kazcontent_data:
+  neuroprep_data:
+  neurojurist_data:
+  smartasp_data:
+  repairbot_data:
+  chatseller_data:
