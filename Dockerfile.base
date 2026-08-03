@@ -1,0 +1,46 @@
+# ═══════════════════════════════════════════════════════════════════
+#  Base Dockerfile for all 9 Telegram Bots
+#  Build context: individual bot directory (e.g., ./koremin)
+# ═══════════════════════════════════════════════════════════════════
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# ── System dependencies ──────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libffi-dev \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Copy and install bot-specific requirements ───────────────────
+COPY requirements.txt* ./
+RUN if [ -f requirements.txt ]; then \
+        pip install --no-cache-dir -r requirements.txt; \
+    fi
+
+# ── Install shared base dependencies (fallback) ──────────────────
+RUN pip install --no-cache-dir \
+    aiogram==3.15.0 \
+    aiohttp \
+    python-dotenv \
+    aiosqlite \
+    pillow \
+    qrcode \
+    pydantic \
+    sqlalchemy \
+    apscheduler \
+    openpyxl \
+    requests \
+    openai
+
+# ── Create data directory ────────────────────────────────────────
+RUN mkdir -p /app/data && chmod 777 /app/data
+
+# ── Health check ─────────────────────────────────────────────────
+HEALTHCHECK --interval=60s --timeout=10s --retries=3 \
+    CMD python -c "import sys; sys.exit(0)"
+
+# ── Default command (overridden in docker-compose) ───────────────
+CMD ["python", "-m", "bot.main"]
